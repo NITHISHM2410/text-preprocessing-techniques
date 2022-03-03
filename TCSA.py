@@ -92,10 +92,3 @@ class TextCleaning:
        sent = " ".join(sent)
 
        return sent
-
-
-
-
-df = pd.Series(["hello my name is nithish im awesome really don't 943597 watttttttteeeeeeeeerrrrr wor9347954ld http:/google/com earth2389123  earth&*&^  wat*(&er  ommmmmmmmmmggggggggggggggg"])
-cle = TextCleaning(stemming=False)
-cle.text_preprocessing(df)
