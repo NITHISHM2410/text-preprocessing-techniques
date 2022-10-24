@@ -32,7 +32,7 @@ class text2val():
         self.word_padding_type = word_padding_type
         self.word_trunc_type = word_trunc_type
         self.word_pad_value = word_pad_value
-
+        
     def to_char(self, sentence):
         sentence = [list(word) for word in sentence]
         return sentence
