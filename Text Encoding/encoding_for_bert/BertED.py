@@ -1,20 +1,29 @@
-class BertED():
+class BertED(tf.keras.layers.Layer):
     def __init__(self, vocab, max_len):
         super(BertED, self).__init__()
-        self.vocab = vocab
+        self.vocab = self.get_vocab(vocab)
         self.maxlen = max_len
-        self.encode = tf.keras.layers.TextVectorization(max_tokens=1000,
-                                                        output_mode='int',
-                                                        vocabulary=self.vocab,
-                                                        standardize='lower_and_strip_punctuation'
-                                                        )
-        self.decode = tf.keras.layers.StringLookup(max_tokens=1000,
-                                                   output_mode='int',
-                                                   vocabulary=self.vocab,
-                                                   invert=True)
+        self.encode = tf.keras.layers.TextVectorization(
+            max_tokens=1000,
+            output_mode='int',
+            vocabulary=self.vocab,
+            standardize='lower_and_strip_punctuation'
+        )
+        self.decode = tf.keras.layers.StringLookup(
+            max_tokens=1000,
+            output_mode='int',
+            vocabulary=self.vocab,
+            invert=True
+        )
+
+    def get_vocab(self,vocab):
+        with open(vocab) as f:
+            vocab = f.read()
+        return vocab.split("\n")    
+
 
     def pad(self, inputs):
-        inputs = tf.keras.utils.pad_sequences(
+        inputs = tf.keras.preprocessing.sequence.pad_sequences(
             inputs,
             maxlen=self.maxlen,
             dtype='int32',
@@ -25,8 +34,7 @@ class BertED():
         return tf.convert_to_tensor(inputs)
 
     def mask(self, input_tensor):
-        mask_tensor = tf.where(tf.equal(input_tensor, 0), tf.fill(tf.shape(input_tensor), 0),
-                               tf.ones_like(input_tensor))
+        mask_tensor = tf.where(tf.equal(input_tensor, 0), tf.fill(tf.shape(input_tensor), 0), tf.ones_like(input_tensor))
         return mask_tensor
 
     def typeids(self, input):
@@ -39,7 +47,7 @@ class BertED():
         sample['input_type_ids'] = self.typeids(sample['input_word_ids'])
         return sample
 
-    def __call__(self, inputs):
+    def call(self, inputs):
         inputs = [self.create_dict(input) for input in inputs]
         return inputs
 
@@ -48,6 +56,10 @@ class BertED():
         cond = tf.math.logical_not(tf.equal(output, "[UNK]"))
         output = tf.boolean_mask(output, cond)
         return output
+    def back_to_string(self,inputs):
+        outputs = [self.decoder(input) for input in inputs]
+        return outputs
+         
 
     def return_vocab(self):
         return self.encode.get_vocabulary()
