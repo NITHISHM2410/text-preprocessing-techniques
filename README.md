@@ -4,12 +4,8 @@
   
  
 # => Text Cleaning Class
-Cleans the data by applying transformations :  
-
-            - converting to lower case  
-            - removing punctuations  
-            - removing tags  
-            - and many more
+In this module, an efficient text cleaning is implemented with various text cleaning features such as Noise reduction, Standardization, Elimination of Stop Words
+Lemmatization, also referred to as stemming and this module can be directly imported and used for quick and efficient cleaning
             
            
            
