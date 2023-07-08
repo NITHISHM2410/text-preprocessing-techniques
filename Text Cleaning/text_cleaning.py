@@ -1,51 +1,46 @@
+import string
+import re
+import nltk
+import pandas as pd
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import words as eng_words
+from nltk.corpus import stopwords
+nltk.download("words")
+nltk.download("stopwords")
+nltk.download("wordnet")
+
+
 class TextCleaning:
     def __init__(self, stemming: bool):
         self._ps = PorterStemmer()
+        self._ls = WordNetLemmatizer()
+
         if type(stemming) is not bool:
             raise TypeError("Parameter < stemming > must be < bool >")
         else:
             self._stem = stemming
-        self._eng = enchant.Dict("en_US")
-        self._sw = self._imp_stop_words()
-        self._double = np.squeeze(pd.read_csv(
-            "https://raw.githubusercontent.com/NITHISHM2410/Text_Preprocessing/NLP/Text%20Cleaning/double_identical.txt",
-            header=None).values).tolist()
-        self._notwords = np.squeeze(pd.read_csv(
-            "https://raw.githubusercontent.com/NITHISHM2410/Text_Preprocessing/NLP/Text%20Cleaning/negative%20words.txt",
-            header=None).values.tolist())
-        self._notwords = self.ready_not_words()
-        self._eng_words = self.ready_eng_words()
 
-    def ready_eng_words(self):
-        self._eng_words = eng_words.words()
-        self._eng_words += self._notwords
-        return self._eng_words
+        self._double = pd.read_csv(
+            "https://raw.githubusercontent.com/NITHISHM2410/Text_Preprocessing/NLP/Text%20Cleaning/utils/double_identical.txt",
+            header=None).values.reshape((-1,)).tolist()
+
+        self._notwords = self.ready_not_words()
+        self._sw = self._imp_stop_words()
 
     def ready_not_words(self):
-        self._notwords = [i.replace("'", "") for i in self._notwords]
-        self._notwords.append("not")
-        return self._notwords
+        words = pd.read_csv(
+            "https://raw.githubusercontent.com/NITHISHM2410/Text_Preprocessing/NLP/Text%20Cleaning/utils/negative%20words.txt",
+            header=None).values.reshape((-1,)).tolist()
+        words.append("not")
+        return words
 
-    @staticmethod
-    def _imp_stop_words():
-        words = stopwords.words("english")
-        words.append("hello")
-        ntwords = [i for i in words if "n't" in i or i[-1] == 'n']
-        ntwords.remove('between')
-        ntwords.remove('again')
-        ntwords.remove('on')
-        ntwords.remove('an')
-        ntwords.remove('won')
-        ntwords.remove('when')
-        ntwords.remove('than')
-        ntwords.remove('then')
-        ntwords = ntwords[5:]
-        stop_words = set(words) - set(ntwords)
-        stop_words.remove("not")
+    def _imp_stop_words(self,):
+        stop_words = stopwords.words("english")
+        stop_words = set(stop_words) - set(self._notwords)
+        stop_words = [i.replace("'", "") for i in stop_words]
+
         return stop_words
-
-    def not_list(self):
-        return self._notwords
 
     def _duplicates(self, text):
         output = ""
@@ -87,4 +82,3 @@ class TextCleaning:
         sent = " ".join(sent)
 
         return sent
-
