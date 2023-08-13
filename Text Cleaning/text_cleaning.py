@@ -3,8 +3,6 @@ import re
 import nltk
 import pandas as pd
 from nltk.stem import PorterStemmer
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import words as eng_words
 from nltk.corpus import stopwords
 nltk.download("words")
 nltk.download("stopwords")
@@ -14,7 +12,6 @@ nltk.download("wordnet")
 class TextCleaning:
     def __init__(self, stemming: bool):
         self._ps = PorterStemmer()
-        self._ls = WordNetLemmatizer()
 
         if type(stemming) is not bool:
             raise TypeError("Parameter < stemming > must be < bool >")
