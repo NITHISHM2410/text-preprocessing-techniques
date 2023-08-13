@@ -39,19 +39,14 @@ class TextCleaning:
 
         return stop_words
 
-    def _duplicates(self, text):
-        output = ""
-        prev = ""
-        for t in text:
-            if len(output) == 0:
-                output += t
-                prev = t
-            if t == prev:
-                continue
-            else:
-                output += t
-                prev = t
-        return output
+    def _duplicates(self, word):
+        if len(word) <= 2:
+            return word
+        result = word[:2]
+        for char in word[2:]:
+            if char != result[-1] or char != result[-2]:
+                result += char
+        return result
 
     def clean(self, sent):
         sent = sent.lower()
