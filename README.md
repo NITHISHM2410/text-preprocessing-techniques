@@ -16,5 +16,14 @@ This module includes BERT model usage based on custom vocabulary, as opposed to 
 
 **Usage**<br>
 Download the.py file to your project directory or directly import it to the python notebook in order to utilize either the encoding module or the cleaning module. Each module may be found in the directory that is specific to its purpose. Along with the module, an example Notebook file is also uploaded for user's convenience in the course of implementation.
-      
- 
+
+**References**  
+
+BERT Pre-trained model used:  
+
+     @article{turc2019,
+      title={Well-Read Students Learn Better: On the Importance of Pre-training Compact Models},
+      author={Turc, Iulia and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+      journal={arXiv preprint arXiv:1908.08962v2 },
+      year={2019}
+    }
